@@ -3,7 +3,7 @@ import re
 import pandas as pd
 from .FRSpy import FRSpy
 from .uncertainty import uncertainty
-import h5file_create_array as h5
+from .h5file_create_array import Writearray
 
 def compute_fru(dataset, case_name, path):
   df = dataset
@@ -23,7 +23,7 @@ def compute_fru(dataset, case_name, path):
   h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
 
   group = h5file.create_group("/", 'full', 'Distances after removing full') # full
-  h5.Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group)
+  Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group)
 
   h5file.close()
 
@@ -34,12 +34,12 @@ def compute_fru(dataset, case_name, path):
   h5file.close()
 
   for s_attr in df.columns[:-1]:
-    #print(s_attr)
+    print(s_attr)
 
     h5file = open_file(file_name, mode="a")
     dataset = df.iloc[:,:-1].drop(s_attr, axis=1) # remove protected
     group = h5file.create_group("/", s_attr, 'Distances after removing '+s_attr)
-    h5.Writearray(dataset, 0.5).sim_array(h5file = h5file, group = group)
+    Writearray(dataset, 0.5).sim_array(h5file = h5file, group = group)
 
     h5file.close()
     h5file = open_file(file_name, mode="r")
