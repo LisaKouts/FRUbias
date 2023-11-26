@@ -51,3 +51,8 @@ def compute_fru(dataset, case_name, path):
     h5file.close()
 
   return FRU, membership_dic
+
+import sys
+if __name__=="__main__":
+  args = compute_fru(sys.argv)
+  print("In mymodule:",args)
