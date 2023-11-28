@@ -25,3 +25,8 @@ class Writearray:
     def similarity(self, i):
         d = np.sum(np.abs(np.subtract(self.df[i][self.numeric], self.df[:,self.numeric])), axis=1) + np.sum(self.df[i][self.nominal] != self.df[:,self.nominal],axis=1)
         return np.exp(-self.alpha * d.astype('float32'))
+    
+import sys
+if __name__=="__main__":
+  args = Writearray(sys.argv[1], sys.argv[2]).sim_array(sys.argv[3], sys.argv[4])
+  print("In mymodule:",args)

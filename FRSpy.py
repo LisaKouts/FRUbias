@@ -48,3 +48,7 @@ class FRSpy:
     def conjunction(self, a, b):
         return max(np.max(a + b - 1), 0)
 
+import sys
+if __name__=="__main__":
+  args = FRSpy(sys.argv[1], sys.argv[2]).regions(sys.argv[3], sys.argv[4])
+  print("In mymodule:",args)

@@ -2,8 +2,9 @@ from tables import *
 import re
 import pandas as pd
 from .FRSpy import FRSpy
-from .uncertainty import uncertainty
 from .h5file_create_array import Writearray
+import h5py
+import pickle
 
 def compute_fru(dataset, case_name, path):
   df = dataset
@@ -14,8 +15,6 @@ def compute_fru(dataset, case_name, path):
   df.columns = list(map(lambda x: re.sub('/|\(|\)|>|<|=| ', '',x), list(df.columns)))
 
   # fr values to fuzzy rough regions
-  membership_dic = {}
-  FRU = []
 
   target = df.iloc[:,-1]
   membership = pd.get_dummies(target)
@@ -29,8 +28,13 @@ def compute_fru(dataset, case_name, path):
 
   h5file = open_file(file_name, mode="r")
   frregions = FRSpy(target, membership).regions(file_name,'full')
-  membership_dic['full'] = frregions
 
+  with open('full_mem.pickle', 'wb') as handle:
+    pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
+  h5file.close()
+
+  h5file = h5py.File(file_name, mode="a")
+  del h5file['full']
   h5file.close()
 
   for s_attr in df.columns[:-1]:
@@ -45,12 +49,13 @@ def compute_fru(dataset, case_name, path):
     h5file = open_file(file_name, mode="r")
 
     frregions = FRSpy(target, membership).regions(file_name,s_attr)
-    membership_dic[s_attr] = frregions
-
-    FRU.append([s_attr, uncertainty(membership_dic['full'], membership_dic[s_attr], 0)])
+    with open(s_attr+'_mem.pickle', 'wb') as handle:
+      pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
     h5file.close()
 
-  return FRU, membership_dic
+    h5file = h5py.File(file_name, mode="a")
+    del h5file[s_attr]
+    h5file.close()
 
 import sys
 if __name__=="__main__":
