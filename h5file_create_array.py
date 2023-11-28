@@ -19,7 +19,6 @@ class Writearray:
 
     def sim_array(self, h5file, group):
        for instance in tqdm(range(0,len(self.df)), desc='Building similarity matrix'):
-          sleep(0.25)
           sim = self.similarity(instance)
           h5file.create_array(group, 'col'+str(instance), sim, 'Distance instance '+str(instance))
 
