@@ -1,5 +1,7 @@
 import numpy as np
 from tables import *
+from tqdm import tqdm
+from time import sleep
 
 class Writearray:
 
@@ -16,7 +18,8 @@ class Writearray:
         self.alpha = alpha
 
     def sim_array(self, h5file, group):
-       for instance in range(0,len(self.df)):
+       for instance in tqdm(range(0,len(self.df)), desc='Building similarity matrix'):
+          sleep(0.25)
           sim = self.similarity(instance)
           h5file.create_array(group, 'col'+str(instance), sim, 'Distance instance '+str(instance))
 

@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import h5py as hp
+from tqdm import tqdm
+from time import sleep
 
 class FRSpy:
 
@@ -16,7 +18,7 @@ class FRSpy:
         BND = np.zeros((len(np.unique(self.target)), len(self.target)))
         
         with hp.File(h5file, "r") as f:
-            for instance in f[key].keys(): # iterating through rows
+            for instance in tqdm(f[key].keys(), desc='Computing Membership Values'): # iterating through rows
                 i = int(instance[3:])
                 distance = f[key][instance][:]
                 for k in np.unique(self.target):
