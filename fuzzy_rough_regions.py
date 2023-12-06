@@ -5,9 +5,31 @@ from .FRSpy import FRSpy
 from .h5file_create_array import Writearray
 import h5py
 import pickle
+import os 
 
-def compute_fru(dataset, case_name, path):
-  df = dataset
+def compute_fru(df, case_name, path, columns, complete = True):
+  '''
+  A function that computes the membership values to fuzzy-rough regions.
+
+  Attributes
+  ------------
+  df : pandas DataFrame
+    Contains all variables in the dataset plus the decision variable which must be located in the LAST column
+  
+  case_name : str
+    name of the h5 file
+    
+  path : str
+    path to file
+  
+  columns: list of strings
+    a list of the column names to be suppressed or removed from the dataset. after removal, the fuzzy-rough
+    set regions will be computed using the rest of the data
+  
+  complete : bool
+    if True, the membership values to the fuzzy-rought regions are create using the complete set of data. 
+    if this object already exists, you can set it to False to save time if dealing with large dataset
+  '''
 
   # rename the column names cause they contain illegal characters and h5 cannot index columns properly
   df.columns = list(map(lambda x: re.sub('=<', 'less',x), list(df.columns)))
@@ -18,26 +40,28 @@ def compute_fru(dataset, case_name, path):
 
   target = df.iloc[:,-1]
   membership = pd.get_dummies(target)
-  file_name = path+"distance_matrix_"+case_name+".h5"
-  h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
+  file_name = os.path.join(path, "matrix_"+case_name+".h5")
 
-  group = h5file.create_group("/", 'full', 'Distances after removing full') # full
-  Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group)
+  if complete == True:
+    h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
 
-  h5file.close()
+    group = h5file.create_group("/", 'full', 'Distances after removing full') # full
+    Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group)
 
-  h5file = open_file(file_name, mode="r")
-  frregions = FRSpy(target, membership).regions(file_name,'full')
+    h5file.close()
 
-  with open('full_mem.pickle', 'wb') as handle:
-    pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
-  h5file.close()
+    h5file = open_file(file_name, mode="r")
+    frregions = FRSpy(target, membership).regions(file_name,'full')
 
-  h5file = h5py.File(file_name, mode="a")
-  del h5file['full']
-  h5file.close()
+    with open('full_mem.pickle', 'wb') as handle:
+      pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    h5file.close()
 
-  for s_attr in df.columns[:-1]:
+    h5file = h5py.File(file_name, mode="a")
+    del h5file['full']
+    h5file.close()
+
+  for s_attr in columns:
     print(s_attr)
 
     h5file = open_file(file_name, mode="a")
