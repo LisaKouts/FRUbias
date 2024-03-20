@@ -7,7 +7,7 @@ import h5py
 import pickle
 import os 
 
-def compute_membership_values(df, case_name, path, columns, complete = True):
+def compute_membership_values(df, case_name, path, columns, complete = True, show_progress = False):
   '''
   A function that computes the membership values to fuzzy-rough regions.
 
@@ -51,7 +51,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True):
     h5file.close()
 
     h5file = open_file(file_name, mode="r")
-    frregions = FRSpy(target, membership).regions(file_name,'full')
+    frregions = FRSpy(target, membership).regions(file_name,'full', show_progress = show_progress)
 
     with open('full_mem.pickle', 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -72,7 +72,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True):
     h5file.close()
     h5file = open_file(file_name, mode="r")
 
-    frregions = FRSpy(target, membership).regions(file_name,s_attr)
+    frregions = FRSpy(target, membership).regions(file_name,s_attr, show_progress = show_progress)
     with open(s_attr+'_mem.pickle', 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
     h5file.close()
