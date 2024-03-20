@@ -77,7 +77,7 @@ def fru_all_feature(FRU_gt, decision_class, columns, prots, path = '.', l1_norm 
 
 
     # Group FRU
-    for prot in prots:
+    # for prot in prots:
 
 
-    return mem_dic, FRU_gt
+    # return mem_dic, FRU_gt
