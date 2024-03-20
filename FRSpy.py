@@ -1,9 +1,6 @@
 import numpy as np
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
 import h5py as hp
 from tqdm import tqdm
-from time import sleep
 
 class FRSpy:
 

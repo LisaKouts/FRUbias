@@ -1,11 +1,37 @@
 import numpy as np
 from tables import *
 from tqdm import tqdm
-from time import sleep
 
 class Writearray:
+    '''
+    This class computes the similarity matrix based on which the fuzzy rough sets are later computed
+    '''
 
     def __init__(self, df, alpha):
+        '''
+        Preprocessing steps, the numeric variables are normalized in the interval [0,1]
+
+        Attributes
+        ----------
+        df : pandas DataFrame
+            a dataset consisting of several variables, note that no decision / outcome feature should be present
+        
+        alpha : float
+            this variable in the interval [0,1] helps separating the fuzzy-rough regions, 
+            the larger it is the more separated the regions
+
+        Returns
+        -------
+        numeric : list of bool
+            each entry in the list represents a the data type of a feature in the dataset. if True, this 
+            feature is numeric, if False, the feature is nominal. it is needed to compute the Heterogeneous
+            Manhattan Overal distance metric
+        
+        nominal : list of bool
+            each entry in the list represents a the data type of a feature in the dataset. if True, this 
+            feature is nominal, if False, the feature is numeric. it is needed to compute the Heterogeneous
+            Manhattan Overal distance metric
+        '''
         
         self.numeric = [False if df[col].dtype == 'object' else True for col in df]
         self.nominal = [True if df[col].dtype == 'object' else False for col in df]

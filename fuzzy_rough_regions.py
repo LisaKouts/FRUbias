@@ -7,7 +7,7 @@ import h5py
 import pickle
 import os 
 
-def compute_fru(df, case_name, path, columns, complete = True):
+def compute_membership_values(df, case_name, path, columns, complete = True):
   '''
   A function that computes the membership values to fuzzy-rough regions.
 
@@ -83,5 +83,5 @@ def compute_fru(df, case_name, path, columns, complete = True):
 
 import sys
 if __name__=="__main__":
-  args = compute_fru(sys.argv)
+  args = compute_membership_values(sys.argv)
   print("In mymodule:",args)
