@@ -7,7 +7,7 @@ import h5py
 import pickle
 import os 
 
-def compute_membership_values(df, case_name, path, columns, complete = True, show_progress = False):
+def compute_membership_values(df, case_name, path, columns, complete = True, hide_progress = False):
   '''
   A function that computes the membership values to fuzzy-rough regions.
 
@@ -46,12 +46,12 @@ def compute_membership_values(df, case_name, path, columns, complete = True, sho
     h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
 
     group = h5file.create_group("/", 'full', 'Distances after removing full') # full
-    Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group)
+    Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
 
     h5file.close()
 
     h5file = open_file(file_name, mode="r")
-    frregions = FRSpy(target, membership).regions(file_name,'full', show_progress = show_progress)
+    frregions = FRSpy(target, membership).regions(file_name,'full', hide_progress = hide_progress)
 
     with open('full_mem.pickle', 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -62,17 +62,18 @@ def compute_membership_values(df, case_name, path, columns, complete = True, sho
     h5file.close()
 
   for s_attr in columns:
-    print(s_attr)
+    if hide_progress:
+      print(s_attr)
 
     h5file = open_file(file_name, mode="a")
     dataset = df.iloc[:,:-1].drop(s_attr, axis=1) # remove protected
     group = h5file.create_group("/", s_attr, 'Distances after removing '+s_attr)
-    Writearray(dataset, 0.5).sim_array(h5file = h5file, group = group)
+    Writearray(dataset, 0.5).sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
 
     h5file.close()
     h5file = open_file(file_name, mode="r")
 
-    frregions = FRSpy(target, membership).regions(file_name,s_attr, show_progress = show_progress)
+    frregions = FRSpy(target, membership).regions(file_name,s_attr, hide_progress = hide_progress)
     with open(s_attr+'_mem.pickle', 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
     h5file.close()

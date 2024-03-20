@@ -43,8 +43,8 @@ class Writearray:
         self.df = df.values
         self.alpha = alpha
 
-    def sim_array(self, h5file, group):
-       for instance in tqdm(range(0,len(self.df)), desc='Building similarity matrix'):
+    def sim_array(self, h5file, group, hide_progress = False):
+       for instance in tqdm(range(0,len(self.df)), desc='Building similarity matrix', disable=hide_progress):
           sim = self.similarity(instance)
           h5file.create_array(group, 'col'+str(instance), sim, 'Distance instance '+str(instance))
 
@@ -54,5 +54,5 @@ class Writearray:
     
 import sys
 if __name__=="__main__":
-  args = Writearray(sys.argv[1], sys.argv[2]).sim_array(sys.argv[3], sys.argv[4])
+  args = Writearray(sys.argv[1], sys.argv[2]).sim_array(sys.argv[3], sys.argv[4], sys.argv[5])
   print("In mymodule:",args)

@@ -8,14 +8,14 @@ class FRSpy:
         self.membership = membership.to_numpy().astype('int32')
         self.target = target.astype('int32')
 
-    def regions(self, h5file, key, show_progress):
+    def regions(self, h5file, key, hide_progress):
 
         POS = np.zeros((len(np.unique(self.target)), len(self.target)))
         NEG = np.zeros((len(np.unique(self.target)), len(self.target)))
         BND = np.zeros((len(np.unique(self.target)), len(self.target)))
         
         with hp.File(h5file, "r") as f:
-            for instance in tqdm(f[key].keys(), desc='Computing Membership Values', disable=show_progress): # iterating through rows
+            for instance in tqdm(f[key].keys(), desc='Computing Membership Values', disable=hide_progress): # iterating through rows
                 i = int(instance[3:])
                 distance = f[key][instance][:]
                 for k in np.unique(self.target):
@@ -47,5 +47,5 @@ class FRSpy:
 
 import sys
 if __name__=="__main__":
-  args = FRSpy(sys.argv[1], sys.argv[2]).regions(sys.argv[3], sys.argv[4])
+  args = FRSpy(sys.argv[1], sys.argv[2]).regions(sys.argv[3], sys.argv[4], sys.argv[5])
   print("In mymodule:",args)
