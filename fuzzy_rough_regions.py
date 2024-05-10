@@ -69,7 +69,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     h5file = open_file(file_name, mode="a")
     dataset = df.iloc[:,:-1].drop(s_attr, axis=1) # remove protected
     group = h5file.create_group("/", s_attr, 'Distances after removing '+s_attr)
-    Writearray(dataset, 0.5).sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
+    Writearray(dataset, 0.5, s_attr).sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
 
     h5file.close()
     h5file = open_file(file_name, mode="r")
