@@ -46,7 +46,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
 
     group = h5file.create_group("/", 'full', 'Distances after removing full') # full
-    Writearray(df.iloc[:,:-1], 0.5).sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
+    Writearray(df.iloc[:,:-1], 0.5, 'full').sim_array(h5file = h5file, group = group, hide_progress = hide_progress)
 
     h5file.close()
 
@@ -63,8 +63,8 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     h5file.close()
 
   for s_attr in columns:
-    if hide_progress:
-      print(s_attr)
+    # if hide_progress:
+    #   print(s_attr)
 
     h5file = open_file(file_name, mode="a")
     dataset = df.iloc[:,:-1].drop(s_attr, axis=1) # remove protected

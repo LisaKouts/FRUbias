@@ -7,7 +7,7 @@ class Writearray:
     This class computes the similarity matrix based on which the fuzzy rough sets are later computed
     '''
 
-    def __init__(self, df, alpha):
+    def __init__(self, df, alpha, variable):
         '''
         Preprocessing steps, the numeric variables are normalized in the interval [0,1]
 
@@ -19,6 +19,9 @@ class Writearray:
         alpha : float
             this variable in the interval [0,1] helps separating the fuzzy-rough regions, 
             the larger it is the more separated the regions
+        
+        variable : string
+            name of variable that is uppressed
 
         Returns
         -------
@@ -32,7 +35,7 @@ class Writearray:
             feature is nominal, if False, the feature is numeric. it is needed to compute the Heterogeneous
             Manhattan Overal distance metric
         '''
-        
+        self.variable = variable
         self.numeric = [False if df[col].dtype == 'object' else True for col in df]
         self.nominal = [True if df[col].dtype == 'object' else False for col in df]
 
@@ -44,7 +47,7 @@ class Writearray:
         self.alpha = alpha
 
     def sim_array(self, h5file, group, hide_progress = False):
-       for instance in tqdm(range(0,len(self.df)), desc='Building similarity matrix', disable=hide_progress):
+       for instance in tqdm(range(0,len(self.df)), desc=self.variable+' building similarity matrix', disable=hide_progress):
           sim = self.similarity(instance)
           h5file.create_array(group, 'col'+str(instance), sim, 'Distance instance '+str(instance))
 

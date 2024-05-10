@@ -15,7 +15,7 @@ class FRSpy:
         BND = np.zeros((len(np.unique(self.target)), len(self.target)))
         
         with hp.File(h5file, "r") as f:
-            for instance in tqdm(f[key].keys(), desc='Computing Membership Values', disable=hide_progress): # iterating through rows
+            for instance in tqdm(f[key].keys(), desc=key+' computing Membership Values', disable=hide_progress): # iterating through rows
                 i = int(instance[3:])
                 distance = f[key][instance][:]
                 for k in np.unique(self.target):
