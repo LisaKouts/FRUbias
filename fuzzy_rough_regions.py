@@ -53,7 +53,8 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     h5file = open_file(file_name, mode="r")
     frregions = FRSpy(target, membership).regions(file_name,'full', hide_progress = hide_progress)
 
-    with open('full_mem.pickle', 'wb') as handle:
+    file_name_pickle = os.path.join(path, 'full_mem.pickle')
+    with open(file_name_pickle, 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
     h5file.close()
 
@@ -74,7 +75,8 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     h5file = open_file(file_name, mode="r")
 
     frregions = FRSpy(target, membership).regions(file_name,s_attr, hide_progress = hide_progress)
-    with open(s_attr+'_mem.pickle', 'wb') as handle:
+    file_name_pickle = os.path.join(path, s_attr+'_mem.pickle')
+    with open(file_name_pickle, 'wb') as handle:
       pickle.dump(frregions, handle, protocol=pickle.HIGHEST_PROTOCOL)
     h5file.close()
 
