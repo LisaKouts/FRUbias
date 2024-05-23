@@ -47,7 +47,7 @@ def fru_all_feature(FRU_gt, decision_class, columns, prots, path = '.', l1_norm 
     for root, dirs, files in os.walk(path, topdown=False):
         for name in files:
             if 'pickle' in name:
-                att_name = re.findall(r"(.*?)\_", name)[0]
+                att_name = re.findall(r"(.*?)_mem.pickle", name)[0] # there is an issue when there _ in name, only picks first word, yikes
                 file_path_name = os.path.join(root, name) 
                 with open(file_path_name, 'rb') as handle: 
                     mem_dic_att = pickle.load(handle)

@@ -7,7 +7,7 @@ import h5py
 import pickle
 import os 
 
-def compute_membership_values(df, case_name, path, columns, complete = True, hide_progress = False):
+def compute_membership_values(df, case_name, path, columns, complete = False, hide_progress = False):
   '''
   A function that computes the membership values to fuzzy-rough regions.
 
@@ -26,7 +26,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
     a list of the column names to be suppressed or removed from the dataset. after removal, the fuzzy-rough
     set regions will be computed using the rest of the data
   
-  complete : bool
+  complete : False
     if True, the membership values to the fuzzy-rought regions are create using the complete set of data. 
     if this object already exists, you can set it to False to save time if dealing with large dataset
   '''
@@ -42,7 +42,7 @@ def compute_membership_values(df, case_name, path, columns, complete = True, hid
   membership = pd.get_dummies(target)
   file_name = os.path.join(path, "matrix_"+case_name+".h5")
 
-  if complete == True:
+  if not complete:
     h5file = open_file(file_name, mode="w", title=case_name) # create h5 file to store distance matrix
 
     group = h5file.create_group("/", 'full', 'Distances after removing full') # full

@@ -41,7 +41,7 @@ class Writearray:
 
         num = df.loc[:,self.numeric]
         scaled=np.subtract(num,np.min(num,axis=0))/np.subtract(np.max(num,axis=0),np.min(num,axis=0))
-        df[df.columns[self.numeric]] = scaled.round(3).astype('float32')
+        df.loc[:,df.columns[self.numeric]] = scaled.round(3).astype('float32')
 
         self.df = df.values
         self.alpha = alpha
