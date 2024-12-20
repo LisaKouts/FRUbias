@@ -32,7 +32,8 @@ path = os.path.join(path, 'bank_toy')
 if not os.path.exists(path):
     os.makedirs(os.path.join(path))
 
-# compute membership values to the fuzzy-rough positive, negative and boundary regions for the complete dataset and after removing each feature from the data
+# compute membership values to the fuzzy-rough positive, negative and boundary regions
+# for the complete dataset and after removing each feature from the data
 FRU(df, path).membership_values(c, target, 'bank', similarity='HVDM', hide_progress=True)
 
 # load the membership values
