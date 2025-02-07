@@ -68,8 +68,11 @@ class FRSpy:
         return inf, 1-sup, sup-inf
 
     def implicator(self, a, b):
-        if self.im == 'Luka':
+        if self.im == 'Lukasiewicz':
             return min(np.min(1 - a + b), 1)
+        
+        if self.im == 'Zadeh':
+            return min(np.maximum(1-a, np.minimum(a, b)))
         
         if self.im == 'Fodor':
             return min(np.where(a <= b, 1, np.maximum(1-a,b)))
@@ -84,7 +87,7 @@ class FRSpy:
             return min(goguen)
 
     def conjunction(self, a, b):
-        if self.con == 'Luka':
+        if self.con == 'Lukasiewicz':
             return max(np.max(a + b - 1), 0)
         
         if self.con == 'Standard':
